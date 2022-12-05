@@ -2,10 +2,12 @@ const Job = require("../models/jobModel");
 const ErrorHandler = require("../utils/errorHandler");
 
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const ApiFeatures = require("../utils/apifeatures");
 
 //create Job
 
 exports.createJob = catchAsyncErrors(async (req, res, next) => {
+  req.body.user = req.user.id;
   const job = await Job.create(req.body);
   res.status(201).json({
     success: true,
@@ -15,9 +17,17 @@ exports.createJob = catchAsyncErrors(async (req, res, next) => {
 
 //Get all jobs
 
-exports.getAllJobs = (req, res) => {
-  res.status(200).json({ message: "route is working fine" });
-};
+exports.getAllJobs = catchAsyncErrors(async (req, res) => {
+  const resultPerPage = 10;
+  const jobCount = await Job.countDocuments();
+  const apiFeatures = new ApiFeatures(Job.find(), req.query)
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+  const job = await apiFeatures.query;
+
+  res.status(200).json({ success: true, job });
+});
 
 // Update Job --Admin
 
@@ -79,5 +89,6 @@ exports.getJobDetails = async (req, res, next) => {
   res.status(200).json({
     success: true,
     job,
+    jobCount,
   });
 };

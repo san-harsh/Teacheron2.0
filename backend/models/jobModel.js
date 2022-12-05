@@ -35,26 +35,32 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: [true, "please Enter Job Category"],
   },
-  numofReviews: {
-    type: Number,
-    default: 0,
+  // numofReviews: {
+  //   type: Number,
+  //   default: 0,
+  // },
+  // reviews: [
+  //   {
+  //     name: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //     rating: {
+  //       type: Number,
+  //       required: true,
+  //     },
+  //     comment: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //   },
+  // ],
+
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: true,
   },
-  reviews: [
-    {
-      name: {
-        type: String,
-        required: true,
-      },
-      rating: {
-        type: Number,
-        required: true,
-      },
-      comment: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
 
   createdAt: {
     type: Date,
